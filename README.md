@@ -11,7 +11,7 @@
 Claude Code で:
 
 ```
-/plugin marketplace add <このリポジトリのURL または フォルダのパス>
+/plugin marketplace add seikotudetanren-bit/lp-factory
 /plugin install lp-factory@lp-factory
 ```
 
