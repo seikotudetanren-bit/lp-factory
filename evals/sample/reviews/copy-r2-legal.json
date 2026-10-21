@@ -1,0 +1,13 @@
+{
+  "reviewed_at": "2026-10-21T10:00:00+09:00",
+  "mode": "website",
+  "target": "copy",
+  "round": 2,
+  "kind": "legal",
+  "verdict": "pass",
+  "l1_result": "pass",
+  "findings": [],
+  "adv_mapping": [],
+  "image_review": null,
+  "notes": "（サンプル）"
+}

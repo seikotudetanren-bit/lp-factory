@@ -1,0 +1,17 @@
+{
+  "description": "lp-projects/ 配下の copy.md と index.html を書き換えるたびに、法令L1と構造の検証を自動で走らせる",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/hook_validate.py\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

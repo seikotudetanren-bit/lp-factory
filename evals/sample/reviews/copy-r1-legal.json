@@ -1,0 +1,22 @@
+{
+  "reviewed_at": "2026-10-21T10:00:00+09:00",
+  "mode": "website",
+  "target": "copy",
+  "round": 1,
+  "kind": "legal",
+  "verdict": "fail",
+  "l1_result": "pass",
+  "findings": [
+    {
+      "id": "L-1",
+      "item": "Ⅵ4(1)",
+      "section": "reasons",
+      "quote": "施術のあとは体が軽くなっていくのを感じていただけます",
+      "reason": "効果の言い換え。体の変化を約束している",
+      "fix_hint": "院の行動（説明する、確認する）に置き換える"
+    }
+  ],
+  "adv_mapping": [],
+  "image_review": null,
+  "notes": "（サンプル）"
+}

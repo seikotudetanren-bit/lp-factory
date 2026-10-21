@@ -1,0 +1,33 @@
+{
+  "reviewed_at": "2026-10-21T10:00:00+09:00",
+  "mode": "website",
+  "target": "copy",
+  "round": 1,
+  "kind": "appeal",
+  "verdict": "fail",
+  "scores": {
+    "R1": 8,
+    "R2": 8,
+    "R3": 8,
+    "R4": 6,
+    "R5": 7,
+    "R6": 9,
+    "R7": 8
+  },
+  "average": 7.7,
+  "findings": [
+    {
+      "id": "R4-1",
+      "rubric": "R4",
+      "section": "reasons",
+      "quote": "丁寧なカウンセリング",
+      "reason": "形容詞だけで事実がない",
+      "fix_hint": "何を・どの順で説明するかを書く"
+    }
+  ],
+  "headline_check": {
+    "best": 1,
+    "reason": "地域と状況が両方入っている"
+  },
+  "notes": "（サンプル）"
+}

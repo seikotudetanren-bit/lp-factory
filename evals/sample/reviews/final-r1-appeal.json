@@ -1,0 +1,24 @@
+{
+  "reviewed_at": "2026-10-21T10:00:00+09:00",
+  "mode": "website",
+  "target": "final",
+  "round": 1,
+  "kind": "appeal",
+  "verdict": "pass",
+  "scores": {
+    "R1": 9,
+    "R2": 8,
+    "R3": 9,
+    "R4": 8,
+    "R5": 8,
+    "R6": 9,
+    "R7": 9
+  },
+  "average": 8.6,
+  "findings": [],
+  "headline_check": {
+    "best": 1,
+    "reason": "…"
+  },
+  "notes": "（サンプル）"
+}

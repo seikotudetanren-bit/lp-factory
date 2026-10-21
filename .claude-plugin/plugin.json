@@ -1,0 +1,9 @@
+{
+  "name": "lp-factory",
+  "version": "0.4.0",
+  "description": "整骨院の集客用・縦長LPを、ヒアリング→調査→コピー→法令審査→HTML組版→検証まで再現性のある手順で作るプラグイン",
+  "author": {
+    "name": "重原浩貴"
+  },
+  "keywords": ["landing-page", "lp", "整骨院", "接骨院", "柔整", "広告ガイドライン"]
+}
