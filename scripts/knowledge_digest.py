@@ -18,6 +18,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from legal_items import CANONICAL  # noqa: E402
 from lp_knowledge import all_cases  # noqa: E402
 
 MAX_QUOTES_PER_ITEM = 3
@@ -65,7 +66,8 @@ def main():
             if q and q not in quotes[key] and len(quotes[key]) < MAX_QUOTES_PER_ITEM:
                 quotes[key].append(q)
         for item, n in cnt.most_common():
-            print(f"- **{item}**（{n}回）")
+            desc = CANONICAL.get(item, "分類コードにない（migrate_rejections.py で付け直す）")
+            print(f"- **{item}** {desc}（{n}回）")
             for q in quotes[item]:
                 print(f"  - 「{q[:60]}」")
         print()

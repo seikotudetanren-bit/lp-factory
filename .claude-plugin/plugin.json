@@ -1,6 +1,6 @@
 {
   "name": "lp-factory",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "整骨院の集客用・縦長LPを、ヒアリング→調査→コピー→法令審査→HTML組版→検証まで再現性のある手順で作るプラグイン",
   "author": {
     "name": "重原浩貴"

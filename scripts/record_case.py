@@ -23,6 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check_brief import filled, parse as parse_brief  # noqa: E402
+from legal_items import normalize as normalize_item  # noqa: E402
 from lp_knowledge import (  # noqa: E402
     REVIEW_NAME, SCHEMA_VERSION, dump_json, git_commit, load_json, parse_copy, plugin_version,
 )
@@ -53,6 +54,20 @@ def final_passed(reviews: list[dict]) -> bool:
     last = max(r["round"] for r in finals)
     kinds = {r["kind"]: r["verdict"] for r in finals if r["round"] == last}
     return kinds.get("legal") == "pass" and kinds.get("appeal") == "pass"
+
+
+def rejection_row(case, slug, run_id, b, r, fd) -> dict:
+    """rejections.jsonl の1行。法令の item は分類コード（legal_items）に正規化し、元の表記も残す。"""
+    raw = fd.get("item") if r["kind"] == "legal" else fd.get("rubric")
+    item, rest = (normalize_item(str(raw or "")) if r["kind"] == "legal" else (raw, ""))
+    ref = "／".join(x for x in (str(fd.get("ref") or ""), rest) if x)
+    return {
+        "recorded_at": case["recorded_at"], "slug": slug, "run_id": run_id,
+        "mode": b.get("compliance_mode"), "target": r["target"], "round": r["round"],
+        "kind": r["kind"], "item": item or "未分類", "item_raw": raw, "ref": ref or None,
+        "section": fd.get("section"), "quote": fd.get("quote"),
+        "reason": fd.get("reason"), "fix_hint": fd.get("fix_hint"),
+    }
 
 
 def as_list(v):
@@ -151,13 +166,7 @@ def main():
     with rej.open("a", encoding="utf-8") as f:
         for r in reviews:
             for fd in r["findings"]:
-                f.write(json.dumps({
-                    "recorded_at": case["recorded_at"], "slug": slug, "run_id": run_id,
-                    "mode": b.get("compliance_mode"), "target": r["target"], "round": r["round"],
-                    "kind": r["kind"], "item": fd.get("item") or fd.get("rubric"),
-                    "section": fd.get("section"), "quote": fd.get("quote"),
-                    "reason": fd.get("reason"), "fix_hint": fd.get("fix_hint"),
-                }, ensure_ascii=False) + "\n")
+                f.write(json.dumps(rejection_row(case, slug, run_id, b, r, fd), ensure_ascii=False) + "\n")
                 n += 1
 
     print(f"記録しました: {dest}")

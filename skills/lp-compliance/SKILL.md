@@ -73,6 +73,18 @@ python3 "$PLUGIN_ROOT/scripts/legal_check.py" <copy.md または index.html> --m
 
 L1 は文字列一致なので言い換えを取りこぼす。**L1の通過は合格の理由にならない。**
 
+## 指摘の分類コード
+
+法令の指摘（審査役の `findings[].item`、L1 のカテゴリ名、knowledge の `rejections.jsonl`）は、
+**`scripts/legal_items.py` の `CANONICAL` にあるコードだけ**を使う。案件をまたいで集計するため。
+
+- 書き方は `Ⅵ.4(1)` `Ⅲ.3(2)` のように「ローマ数字・点・算用数字・半角かっこ」。細かい条項（②イ など）は `ref`
+- advertising モードで書ける事項に当たらないものは `柔整師法24条`。Ⅲ章のコードは、その項目の具体的な禁止に当たったときだけ
+- brief にない事実は `事実未確認`
+- 付け方の詳細は `agents/lp-legal-reviewer.md` の「item（分類コード）の付け方」。保存時にフックが `check_review.py` で検査する
+
+コードを増やすときは `CANONICAL` に足し、表記ゆれは `ALIASES` に足す。既存の記録は `scripts/migrate_rejections.py` で付け直す。
+
 ## 必須記載（website モード）
 
 - 問い合わせ先（電話番号または予約手段） — Ⅵ.3(1)

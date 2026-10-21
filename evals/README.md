@@ -10,6 +10,7 @@ python3 scripts/legal_check.py evals/sample/copy.md --mode website         # →
 python3 scripts/legal_check.py evals/sample/bad-copy.md --mode website     # → NG（exit 1）
 python3 scripts/legal_check.py evals/sample/copy.md --mode advertising     # → NG（website用の構成なので落ちるのが正しい）
 python3 scripts/validate_lp.py evals/sample/index.html --mode website      # → OK（警告: data-todo 1件）
+for f in evals/sample/reviews/*.json; do python3 scripts/check_review.py $f; done   # → すべて OK（法令の分類コード）
 ```
 
 ### 記録の仕組み（一時フォルダで）
@@ -18,7 +19,7 @@ python3 scripts/validate_lp.py evals/sample/index.html --mode website      # →
 T=$(mktemp -d) && mkdir -p $T/lp-projects/minato && cp -r evals/sample/{brief.md,copy.md,index.html,reviews} $T/lp-projects/minato/
 python3 scripts/init_knowledge.py $T/knowledge
 python3 scripts/record_case.py $T/lp-projects/minato --knowledge $T/knowledge --commit    # → 記録・落ちた表現2件
-python3 scripts/knowledge_digest.py --knowledge $T/knowledge --mode website             # → Ⅵ4(1) と R4 が出る
+python3 scripts/knowledge_digest.py --knowledge $T/knowledge --mode website             # → Ⅵ.4(1) と R4 が出る
 sed 's|相談できる接骨院</h1>|相談できる院</h1>|' evals/sample/index.html > $T/pub.html
 python3 scripts/record_publish.py --knowledge $T/knowledge --slug minato --file $T/pub.html   # → hero が変更
 ```

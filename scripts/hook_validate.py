@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PostToolUse フック: lp-projects/ 配下の index.html / copy.md が書き換えられたら検証する。
+"""PostToolUse フック: lp-projects/ 配下の index.html / copy.md / reviews/*.json が書き換えられたら検証する。
 
 標準入力で Claude Code のフック入力（JSON）を受け取る。対象外のファイルなら何もしない。
 NGのときは終了コード2で stderr に結果を返し、書いたエージェント自身に直させる。
@@ -23,7 +23,15 @@ def main():
         return 0
     fp = (payload.get("tool_input") or {}).get("file_path") or ""
     p = Path(fp)
-    if "lp-projects" not in p.parts or p.name not in ("index.html", "copy.md") or not p.exists():
+    if "lp-projects" not in p.parts or not p.exists():
+        return 0
+    if p.parent.name == "reviews" and p.suffix == ".json":
+        r = subprocess.run([sys.executable, str(HERE / "check_review.py"), str(p)], capture_output=True, text=True)
+        if r.returncode == 1:
+            sys.stderr.write(f"審査結果 {p.name} の書式に誤りがあります。直してから完了してください。\n\n{r.stdout}")
+            return 2
+        return 0
+    if p.name not in ("index.html", "copy.md"):
         return 0
 
     mode = "advertising"
