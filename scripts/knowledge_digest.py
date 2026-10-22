@@ -53,7 +53,9 @@ def main():
                 continue
     rows.reverse()  # 新しい順
 
-    legal = [r for r in rows if r.get("kind") == "legal" and r.get("mode") in (a.mode, None)]
+    # 指針Ⅲ（広告）・Ⅵ（ウェブサイト）の指摘はそのモードだけ。他の法令と事実未確認・画像はモードに関係なく効く
+    any_mode = {"景表法", "薬機法", "健康増進法", "不正競争防止法", "事実未確認", "Ⅱ.3"}
+    legal = [r for r in rows if r.get("kind") == "legal" and (r.get("mode") in (a.mode, None) or r.get("item") in any_mode)]
     print("## 過去に法令審査で落ちた表現（同じ形でも言い換えでも書かない）\n")
     if not legal:
         print("まだありません。\n")

@@ -26,6 +26,9 @@ phone: TODO                       # ★ 電話番号
 line_url: TODO                    # 公式LINEの友だち追加URL（無ければ「なし」）
 reservation_url: TODO             # Web予約URL（無ければ「なし」）
 cta_primary: TODO                 # ★ 一番押してほしい行動: line / tel / web のどれか
+# LINEボタンのつなぎ先: common（全ボタン同じ。UTAGEなら line_route_url） / per_clinic（院ごとのLINE。clinics の8項目目にURL）
+#   per_clinic のときの成果は、各院の LINE公式アカウント Manager の「流入経路分析」で、このLP専用URLごとに測る
+cta_target: common
 
 # ---------- 施術者 ----------
 # ★ 1人以上。「名前 / 資格 / 経歴の事実」の順で。資格は国家資格を正式名称で（柔道整復師 など）

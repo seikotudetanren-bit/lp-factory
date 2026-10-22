@@ -114,15 +114,26 @@ def validate(path: Path, mode: str, brief: dict | None = None):
     bad_href = [h for k, h in c.ctas if not h or h == "#" or h.startswith("{{")]
     if bad_href:
         errors.append(f"CTAのリンク先が空・仮のまま: {bad_href}")
-    if len(set(primary)) > 1:
+    if len(set(primary)) > 1 and not (brief and brief.get("cta_target") == "per_clinic"):
         warns.append(f"主CTAのリンク先が統一されていない: {sorted(set(primary))}")
     if not any(h.startswith("tel:") for _, h in c.ctas):
         warns.append("電話リンク（tel:）が無い")
     if not c.sticky:
         errors.append("スマホ用の固定CTA（nav.sticky）が無い")
 
+    # 院ごとのLINE（cta_target: per_clinic）: 主CTAは各院のLINE URLか、院の一覧への移動（#access）だけ
+    per_clinic = bool(brief) and brief.get("cta_target") == "per_clinic"
+    if per_clinic:
+        from check_brief import CLINIC_LINE_INDEX, clinics_of
+        lines = {c[CLINIC_LINE_INDEX] for c in clinics_of(brief) if len(c) > CLINIC_LINE_INDEX}
+        off = sorted({h for h in primary if h not in lines and h != "#access"})
+        if off:
+            errors.append(f"主CTAのリンク先が、各院のLINE URL（brief の clinics）でも #access でもない: {off}")
+        unused = sorted(lines - set(primary))
+        if unused:
+            errors.append(f"brief にある院のLINE URLが、どの主CTAにも使われていない: {unused}")
     # UTAGE: 主CTAはすべてLP専用の登録経路URL。共通URLが混ざるとLP単位の登録数が取れない
-    if brief and brief.get("deploy_target") == "utage":
+    if brief and brief.get("deploy_target") == "utage" and not per_clinic:
         route = brief.get("line_route_url")
         if not filled([route or ""]):
             errors.append("deploy_target が utage なのに brief に line_route_url が無い")

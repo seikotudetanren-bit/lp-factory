@@ -92,6 +92,9 @@ description: 整骨院LPのHTML部品とデザイントークン。copy.md を1�
 - 各院のカードにも主CTA（`.clinic-actions .btn`）を置く。文言は主CTAと同じにし、新しい文を作らない
 - 固定CTA（`.sticky`）の左の「電話」は、院が複数あると1つに決められない。**`href="#clinic-1"` 等ではなく `href="#access"` にし、文言を「各院の電話」にする**。`access` セクションに `id="access"` を付ける
 - 主CTA（LINE）は院に関係なく1つ（共通の登録経路URL）
+- **`cta_target: per_clinic`（院ごとのLINE）のとき:** 各院カードの `.clinic-actions .btn` を、その院のLINE URL（clinics の8項目目）にする。
+  hero・最後のCTA・固定CTAの主ボタンは、院を選ばないと押せないので `href="#access"` にし、文言は copy.md の主CTA
+  （例「院を選んでLINEで予約する」）を使う。`data-cta="primary"` はどちらにも付ける（validate_lp.py が、各院のURLが全部使われているかを見る）
 
 ## 地図
 

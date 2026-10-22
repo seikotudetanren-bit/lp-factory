@@ -182,13 +182,28 @@ dl.info dt { background: var(--bg-alt); font-weight: 700; font-size: 14px; }
 .sticky { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
   background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px);
   border-top: 1px solid var(--line); display: flex; gap: 10px; }
-.sticky .btn { min-height: 50px; font-size: 16px; box-shadow: none; }
+.sticky .btn { min-height: 50px; font-size: 15px; box-shadow: none; white-space: nowrap; padding: 10px 12px; }  /* 主CTAの文言が長くても折り返さない */
 .sticky .btn.ghost { background: var(--bg); color: var(--brand); border: 2px solid var(--brand); flex: 0 0 36%; font-size: 14px; white-space: nowrap; padding: 10px 8px; }
 @media (min-width: 768px) { .sticky { display: none; } body { padding-bottom: 0; } }
 
 footer { padding: 28px 0 24px; font-size: 12px; color: var(--ink-sub); text-align: center; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 .clinic dl.info dt, .clinic-actions a { white-space: nowrap; }  /* 「受付時間」「電話」を途中で折らない */
+/* ===== 2026-10-22 最終審査の指摘で追加 ===== */
+/* 院カード内の主CTA: .clinic-actions a の色指定に負けて、赤地に緑の文字になっていた */
+.clinic-actions a.btn, .clinic-actions .btn { background: var(--accent); color: var(--accent-ink); border: 0; }
+/* スマホでは料金表を1行1ブロックの縦並びにする（3列だと2〜4字ずつ折り返す） */
+@media (max-width: 639px) {
+  table.price thead { display: none; }
+  table.price, table.price tbody, table.price tr, table.price td { display: block; width: 100%; }
+  table.price tr { border-bottom: 1px solid var(--line); padding: 10px 0; }
+  table.price td { border: 0; padding: 2px 14px; }
+  table.price td:first-child { font-weight: 700; }
+  table.price td.yen { font-size: 18px; color: var(--accent); }
+}
+/* 院名ボタン（.pick）が固定CTAに隠れないよう、ヒーローの下に余白を取る */
+.hero .pick { margin-bottom: 8px; }
+.hero { padding-bottom: 72px; }
 </style>
 </head>
 <body>

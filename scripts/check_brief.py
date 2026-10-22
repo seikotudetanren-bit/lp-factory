@@ -23,11 +23,14 @@ EMPTY = {"", "todo", "なし", "none", "-"}
 # 1院のときに必須。複数院（clinics）のときは各行に含める
 LOCATION = ["address", "access", "hours", "holidays", "phone"]
 CLINIC_FIELDS = ["名称", "住所", "行き方", "受付時間", "休業日", "駐車場", "電話"]
+# cta_target: per_clinic のときは8項目目に、その院のLINE友だち追加URL（このLP専用に発行したもの）を書く
+CLINIC_LINE_INDEX = 7
 ENUMS = {
     "cta_primary": {"line", "tel", "web"},
     "traffic_source": {"organic", "ads", "flyer", "mixed"},
     "compliance_mode": {"website", "advertising"},
     "deploy_target": {"html", "utage"},
+    "cta_target": {"common", "per_clinic"},
 }
 
 
@@ -68,8 +71,12 @@ def check(d: dict) -> list[str]:
     clinics = clinics_of(d)
     if clinics:
         for i, c in enumerate(clinics, 1):
-            if len(c) != len(CLINIC_FIELDS):
-                errs.append(f"[書式] clinics の{i}行目は「{' / '.join(CLINIC_FIELDS)}」の{len(CLINIC_FIELDS)}項目（現在 {len(c)}）")
+            need = len(CLINIC_FIELDS) + (1 if d.get("cta_target") == "per_clinic" else 0)
+            if len(c) != need:
+                fields = CLINIC_FIELDS + (["LINE URL"] if need > len(CLINIC_FIELDS) else [])
+                errs.append(f"[書式] clinics の{i}行目は「{' / '.join(fields)}」の{need}項目（現在 {len(c)}）")
+            elif need > len(CLINIC_FIELDS) and not c[CLINIC_LINE_INDEX].startswith("https://"):
+                errs.append(f"[未記入] clinics の{i}行目（{c[0]}）の LINE URL（https:// で始まるURL）")
             elif any(c[j].lower() in EMPTY for j in (0, 1, 3, 4, 6)):  # 行き方・駐車場は任意
                 errs.append(f"[未記入] clinics の{i}行目（{c[0]}）に空欄・TODO がある")
     else:
@@ -95,7 +102,10 @@ def check(d: dict) -> list[str]:
         errs.append("[矛盾] cta_primary が web なのに reservation_url が無い")
 
     # UTAGE ではLPごとの登録経路URLで成果を計測する。院の共通URLのままだとLP単位の数字が取れない
-    if d.get("deploy_target") == "utage":
+    per_clinic = d.get("cta_target") == "per_clinic"
+    if per_clinic and not clinics:
+        errs.append("[矛盾] cta_target が per_clinic なのに clinics が無い（院ごとのLINEは複数院のときだけ）")
+    if d.get("deploy_target") == "utage" and not per_clinic:
         if cta != "line":
             errs.append("[矛盾] deploy_target が utage なのに cta_primary が line ではない（成果を登録経路で計測するため line にする）")
         if not filled(d.get("line_route_url")):
