@@ -161,7 +161,7 @@ python3 "$PLUGIN_ROOT/scripts/record_case.py" lp-projects/<slug> --knowledge "$K
   `compliance_mode` の判断根拠（保健所等に照会したならその記録）
 - **公開したら `/lp-record <slug> <公開した index.html のパス>` を実行してほしい**こと。
   人が直した箇所が記録され、次の案件から反映される
-- 公開から1か月たったら `/lp-results <slug> <開始日> <終了日>` で成果を記録してほしいこと
+- 公開から1か月たったら `/lp-results <slug> <開始日> <終了日>` で成果を記録し、`/lp-retro` で振り返ってほしいこと
 
 ## やってはいけないこと
 

@@ -5,6 +5,13 @@
 ## 1. スクリプトの回帰テスト（数秒・毎回）
 
 ```bash
+python3 scripts/run_evals.py                                  # 下の確認をまとめて実行（CIでも実行）
+python3 scripts/check_legal_oneway.py --base origin/main      # 法令の基準が緩んでいないか
+```
+
+個別に見るときは:
+
+```bash
 python3 scripts/check_brief.py evals/sample/brief.md                       # → OK（exit 0）
 python3 scripts/legal_check.py evals/sample/copy.md --mode website         # → OK（exit 0）
 python3 scripts/legal_check.py evals/sample/bad-copy.md --mode website     # → NG（exit 1）

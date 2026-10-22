@@ -54,13 +54,16 @@ def parse_copy(path: Path) -> dict:
             if not line:
                 continue
             tag = re.match(r"^\[([^\]]+)\]\s*", line)
+            text = line[tag.end():] if tag else line
+            # 末尾の（…）は書き手のメモ。「（採用）」「（採用。理由…）」の両方を採用の印として読む
+            note = re.search(r"[（(]([^（）()]*)[）)]\s*$", text)
+            adopted = bool(note and note.group(1).startswith("採用"))
             items.append({
                 "type": tag.group(1) if tag else None,
-                "text": line[tag.end():] if tag else line,
-                "adopted": "（採用）" in line or "(採用)" in line,
+                "text": (text[:note.start()] if note else text).strip(),
+                "adopted": adopted,
+                "note": note.group(1) if note else None,
             })
-        for it in items:
-            it["text"] = it["text"].replace("（採用）", "").replace("(採用)", "").strip()
         return items
 
     sections = re.findall(r"^##\s*\[([a-z-]+)\]\s*(.*)$", raw, re.M)

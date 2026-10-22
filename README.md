@@ -31,6 +31,7 @@ LPを置きたいフォルダで Claude Code を開き:
 3. `data-todo` と表示された写真枠を実際の写真に差し替え、事実関係を確認して公開します
 4. 公開したら `/lp-record <案件名> <公開した index.html のパス>` で、人が直した箇所を記録します
 5. 1か月ごとに `/lp-results <案件名> <開始日> <終了日>` で成果を記録します
+6. 成果がたまったら `/lp-retro` で振り返り、`/lp-improve` で根拠の揃った改善をPRにします（マージは人が判断）
 
 途中で止まっても、もう一度 `/lp <案件名>` を実行すれば続きから再開します。
 
@@ -70,19 +71,21 @@ LPを置きたいフォルダで Claude Code を開き:
 | 0 | 生産ライン（5エージェント・審査の分離） | ✅ |
 | 1 | 記録（`record_case.py`・`record_publish.py`・`knowledge_digest.py`） | ✅ |
 | 2 | 成果の計測（UTAGE の登録経路で LP表示→CTA→LINE登録→予約 を記録。`/lp-results`） | ✅（UTAGE） |
-| 3 | 振り返り役 `lp-analyst` | 未着手 |
-| 4 | 改善提案役 `lp-improver`（PRを出し、人が承認してマージ） | 未着手 |
+| 3 | 振り返り役 `lp-analyst`（`/lp-retro`）: 事実と仮説を残し、型の候補と根拠を `patterns.jsonl` に積む | ✅ |
+| 4 | 改善提案役 `lp-improver`（`/lp-improve`）: 根拠3案件以上の候補だけをPRにする。回帰テストと法令ガードが通らなければ出さない。人がマージすると型が確定 | ✅ |
 
 | フォルダ | 中身 |
 |---|---|
-| `commands/` | `/lp`・`/lp-record`・`/lp-results` の入口 |
+| `commands/` | `/lp`・`/lp-record`・`/lp-results`・`/lp-retro`・`/lp-improve` の入口 |
+| `skills/lp-learning/` | 振り返りと改善提案の手順書（学ぶループの司令塔） |
+| `.github/workflows/` | PRごとに回帰テストと法令の一方通行ガードを実行 |
 | `skills/lp-utage/` | UTAGE の「空白のファネル（HTML）」への設置と、登録経路での計測 |
 | `skills/lp-orchestration/` | 司令塔の手順書 |
 | `skills/lp-structure/` | 縦長LPのセクション構成と合格ライン |
 | `skills/lp-copywriting/` | 効果を書かずに訴求する文章のルール・言い換え表 |
 | `skills/lp-compliance/` | あはき・柔整広告ガイドライン等の判定基準（`references/` に要点） |
 | `skills/lp-design-system/` | デザイントークンとHTML部品（`assets/template.html`） |
-| `agents/` | 調査・執筆・組版・法令審査・訴求審査の5エージェント |
+| `agents/` | 作るライン5体（調査・執筆・組版・法令審査・訴求審査）＋学ぶループ2体（振り返り・改善提案） |
 | `hooks/` | 保存時の自動検証 |
 | `scripts/` | 機械判定（ブリーフ・法令L1・LP構造）と knowledge への記録 |
 | `templates/` | brief.md・copy.md の書式と、knowledge リポジトリのひな形 |
@@ -119,4 +122,4 @@ LPを置きたいフォルダで Claude Code を開き:
 | エージェントのモデル | 各 `agents/*.md` の `model:`（既定: 調査・組版は sonnet、執筆・審査は opus） |
 | セクション構成 | `skills/lp-structure/SKILL.md` と `scripts/validate_lp.py` の `ORDER` / `REQUIRED` |
 
-変更したら `evals/README.md` の回帰テストを実行してください。
+変更したら `python3 scripts/run_evals.py`（回帰テスト）と `python3 scripts/check_legal_oneway.py --base origin/main`（法令の基準が緩んでいないか）を実行してください。PRでは GitHub Actions が同じものを実行します。

@@ -22,6 +22,7 @@ def main():
     (k / "cases").mkdir(parents=True, exist_ok=True)
     (k / "cases" / ".gitkeep").touch()
     (k / "rejections.jsonl").touch()
+    (k / "patterns.jsonl").touch()
     for src in TEMPLATE.iterdir():
         dst = k / src.name
         if not dst.exists():
