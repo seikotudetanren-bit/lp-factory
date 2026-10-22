@@ -55,14 +55,16 @@ def parse_copy(path: Path) -> dict:
                 continue
             tag = re.match(r"^\[([^\]]+)\]\s*", line)
             text = line[tag.end():] if tag else line
-            # 末尾の（…）は書き手のメモ。「（採用）」「（採用。理由…）」の両方を採用の印として読む
-            note = re.search(r"[（(]([^（）()]*)[）)]\s*$", text)
-            adopted = bool(note and note.group(1).startswith("採用"))
+            # （…）は書き手のメモ。末尾でも途中でも、「採用」で始まるメモがあれば採用の印として読む
+            notes = list(re.finditer(r"[（(]([^（）()]*)[）)]", text))
+            mark = next((m for m in notes if m.group(1).startswith("採用")), None)
+            tail = notes[-1] if notes and re.fullmatch(r"\s*", text[notes[-1].end():]) else None
+            drop = mark or tail
             items.append({
                 "type": tag.group(1) if tag else None,
-                "text": (text[:note.start()] if note else text).strip(),
-                "adopted": adopted,
-                "note": note.group(1) if note else None,
+                "text": (text[:drop.start()] + text[drop.end():]).strip() if drop else text.strip(),
+                "adopted": bool(mark),
+                "note": drop.group(1) if drop else None,
             })
         return items
 
@@ -148,11 +150,12 @@ def latest_run(knowledge: Path, slug: str) -> Path | None:
     return runs[-1] if runs else None
 
 
-def all_cases(knowledge: Path) -> list[dict]:
+def all_cases(knowledge: Path, include_superseded: bool = False) -> list[dict]:
+    """案件の記録を返す。記録し直して置き換え済み（superseded）になった古い記録は、既定では除く。"""
     out = []
     for cj in sorted((knowledge / "cases").glob("*/*/case.json")):
         d = load_json(cj)
-        if d:
+        if d and (include_superseded or d.get("status") != "superseded"):
             d["_dir"] = str(cj.parent)
             out.append(d)
     return out

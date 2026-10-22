@@ -23,6 +23,7 @@ description: 整骨院LPのHTML部品とデザイントークン。copy.md を1�
 | 変えてよい | 変えない |
 |---|---|
 | `:root` のトークン（`--brand` など）を `brand_color` に合わせる | クラス名・`data-section`・`data-cta` 属性（検証スクリプトが使う） |
+| 院の既存LPに見た目をそろえるときは、`</style>` の直前に**テーマのCSSブロック**を足す（トークン・フォント・ボタン・背景の上書き）。Webフォントは Google Fonts の `<link>` だけ可 | Google Fonts 以外の外部CSS・JS |
 | 部品の増減・複製 | 外部CSS・外部JS・Webフォントの読み込み（1ファイル完結を守る） |
 | 写真プレースホルダーを `<img>` に差し替える | 固定CTA（`.sticky`）の削除 |
 

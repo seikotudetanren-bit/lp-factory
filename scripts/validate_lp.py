@@ -26,6 +26,8 @@ REQUIRED = {
 }
 MIN_PRIMARY_CTA = {"website": 3, "advertising": 2}
 ALLOWED_IFRAME = re.compile(r"^https://(www\.)?google\.(com|co\.jp)/maps")
+# Webフォントは Google Fonts のスタイルシートだけ許可する（院の既存LPと見た目をそろえるため。2026-10-22）
+ALLOWED_STYLESHEET = re.compile(r"^https://fonts\.googleapis\.com/css2?\?")
 
 
 class Collector(HTMLParser):
@@ -58,7 +60,8 @@ class Collector(HTMLParser):
             self.imgs.append(a)
         if tag == "script" and a.get("src"):
             self.external.append(f"<script src={a['src']}>")
-        if tag == "link" and "stylesheet" in (a.get("rel") or "") and a.get("href"):
+        if tag == "link" and "stylesheet" in (a.get("rel") or "") and a.get("href") \
+                and not ALLOWED_STYLESHEET.match(a["href"]):
             self.external.append(f"<link stylesheet {a['href']}>")
         if tag == "iframe" and not ALLOWED_IFRAME.match(a.get("src", "")):
             self.external.append(f"<iframe {a.get('src', '')}>")

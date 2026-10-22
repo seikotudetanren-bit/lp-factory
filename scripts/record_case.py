@@ -160,21 +160,48 @@ def main():
     }
     dump_json(dest / "case.json", case)
 
+    # 同じ案件の前の記録は「置き換え済み」にする（集計で二重に数えないため）
+    superseded = []
+    for prev in sorted((knowledge / "cases" / slug).glob("*/case.json")):
+        if prev.parent == dest:
+            continue
+        pc = load_json(prev)
+        if pc and pc.get("status") != "superseded":
+            pc["status"] = "superseded"
+            pc["superseded_by"] = run_id
+            dump_json(prev, pc)
+            superseded.append(prev)
+
     # 審査で落ちた表現を追記する（法令・訴求とも）。次の案件の書き手が読む
+    # 記録し直したときに同じ指摘を二重に足さない（案件・工程・回・種類・引用が同じなら同じ指摘）
     rej = knowledge / "rejections.jsonl"
-    n = 0
+    seen = set()
+    if rej.exists():
+        for line in rej.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                x = json.loads(line)
+                seen.add((x.get("slug"), x.get("target"), x.get("round"), x.get("kind"), x.get("quote")))
+    n = dup = 0
     with rej.open("a", encoding="utf-8") as f:
         for r in reviews:
             for fd in r["findings"]:
-                f.write(json.dumps(rejection_row(case, slug, run_id, b, r, fd), ensure_ascii=False) + "\n")
+                row = rejection_row(case, slug, run_id, b, r, fd)
+                key = (row["slug"], row["target"], row["round"], row["kind"], row["quote"])
+                if key in seen:
+                    dup += 1
+                    continue
+                seen.add(key)
+                f.write(json.dumps(row, ensure_ascii=False) + "\n")
                 n += 1
 
     print(f"記録しました: {dest}")
     print(f"  status={a.status}  copy審査 {case['reviews']['copy_rounds']}回 / final審査 {case['reviews']['final_rounds']}回")
-    print(f"  落ちた表現 {n} 件を rejections.jsonl に追記")
+    print(f"  落ちた表現 {n} 件を rejections.jsonl に追記" + (f"（記録済みの {dup} 件は飛ばした）" if dup else ""))
+    for s in superseded:
+        print(f"  前の記録を置き換え済みにした: {s.parent.name}")
     if a.commit:
         msg = f"case: {slug} {run_id} ({a.status})"
-        print("  " + git_commit(knowledge, [dest, rej], msg))
+        print("  " + git_commit(knowledge, [dest, rej, *[s for s in superseded]], msg))
     return 0
 
 
