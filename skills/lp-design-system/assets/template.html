@@ -189,6 +189,21 @@ dl.info dt { background: var(--bg-alt); font-weight: 700; font-size: 14px; }
 footer { padding: 28px 0 24px; font-size: 12px; color: var(--ink-sub); text-align: center; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 .clinic dl.info dt, .clinic-actions a { white-space: nowrap; }  /* 「受付時間」「電話」を途中で折らない */
+/* ===== 院ごとの受付時間の表（複数院カード用。2026-10-23 の案件で院長の依頼「受付時間を見やすく」から取り込み） ===== */
+/* 曜日（左）×時間（右）。午前／午後は上下に分けて点線で区切り、休業の行は色を変える。スマホで横スクロールしない */
+.clinic dl.info dt.span, .clinic dl.info dd.span { grid-column: 1 / -1; }
+.clinic dl.info dt.span { border-bottom: 0; padding-bottom: 4px; }
+.clinic dl.info dd.span { padding: 0 12px 12px; background: var(--bg-alt); }
+table.hours { width: 100%; border-collapse: collapse; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.hours th, .hours td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top;
+  font-size: 16px; line-height: 1.6; }
+.hours tr:last-child th, .hours tr:last-child td { border-bottom: 0; }
+.hours th { width: 8em; white-space: nowrap; font-weight: 700; background: var(--bg-alt); }
+.hours td .nw { display: block; font-variant-numeric: tabular-nums; }
+.hours td .nw + .sep + .nw { margin-top: 4px; padding-top: 4px; border-top: 1px dashed var(--line); }
+.hours .sep { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }  /* 「／」は読み上げ・コピー用に残し、見た目だけ隠す */
+.hours .hours-note { display: block; color: var(--ink-sub); }
+.hours tr.closed th, .hours tr.closed td { background: color-mix(in srgb, var(--ink) 8%, var(--bg)); color: var(--ink-sub); font-weight: 700; }
 /* ===== 2026-10-22 最終審査の指摘で追加 ===== */
 /* 院カード内の主CTA: .clinic-actions a の色指定に負けて、赤地に緑の文字になっていた */
 .clinic-actions a.btn, .clinic-actions .btn { background: var(--accent); color: var(--accent-ink); border: 0; }

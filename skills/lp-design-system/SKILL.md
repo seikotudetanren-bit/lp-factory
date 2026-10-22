@@ -70,7 +70,12 @@ description: 整骨院LPのHTML部品とデザイントークン。copy.md を1�
         <dl class="info">
           <dt>住所</dt><dd>{{住所}}</dd>
           <dt>行き方</dt><dd>{{行き方}}</dd>
-          <dt>受付時間</dt><dd>{{受付時間}}</dd>
+          <dt class="span">受付時間</dt>
+          <dd class="span"><table class="hours"><tbody>  <!-- 曜日のまとまりごとに1行 -->
+            <tr><th scope="row">{{曜日}}</th><td><span class="nw">{{午前}}</span><span class="sep">／</span><span class="nw">{{午後}}</span></td></tr>
+            <tr><th scope="row">{{曜日}}</th><td><span class="nw">{{時間}}</span><span class="hours-note">{{括弧書きの注記}}</span></td></tr>
+            <tr class="closed"><th scope="row">{{休業の曜日}}</th><td>休業</td></tr>
+          </tbody></table></dd>
           <dt>休業日</dt><dd>{{休業日}}</dd>
           <dt>駐車場</dt><dd>{{駐車場}}</dd>
         </dl>
@@ -88,7 +93,10 @@ description: 整骨院LPのHTML部品とデザイントークン。copy.md を1�
 - 院の並び順は `clinics` の順
 - **hero の主CTAの下にも `.pick`（院名のページ内リンク）を置く。** 広告から来た読者は「自分の行ける院」を最初に探すので、
   hero から自分の院のカードへ1タップで飛べるようにする（セクションの順番は変えずに導線で解決する）
-- 院ごとの受付時間は、曜日のまとまりごとに `<br>` で改行する（1行に全曜日を詰めない）
+- 院ごとの受付時間は `table.hours` にする（上の例）。曜日のまとまりごとに1行、左が曜日・右が時間。
+  午前と午後があれば `<span class="nw">` を2つ `<span class="sep">／</span>` でつなぐ（上下2段・点線で区切って表示される）。
+  「（月曜日が祝日の日は休業）」のような注記は `.hours-note` で時間の下に出す。休業の曜日は最後に `tr.closed` で1行置く。
+  時刻と曜日は brief の clinics から変えない（2026-10-23 の案件で院長の依頼「受付時間を見やすく」から取り込み。訴求審査で高評価）
 - **電話番号・時刻の範囲（9:00〜12:00）・括弧書き（A院・B院・C院）は `<span class="nw">` で包む。** スマホで途中から折れると読めない（2026-10-21 の最終審査で指摘）
 - 各院のカードにも主CTA（`.clinic-actions .btn`）を置く。文言は主CTAと同じにし、新しい文を作らない
 - 固定CTA（`.sticky`）の左の「電話」は、院が複数あると1つに決められない。**`href="#clinic-1"` 等ではなく `href="#access"` にし、文言を「各院の電話」にする**。`access` セクションに `id="access"` を付ける
