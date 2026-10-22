@@ -16,6 +16,7 @@ python3 scripts/check_brief.py evals/sample/brief.md                       # →
 python3 scripts/legal_check.py evals/sample/copy.md --mode website         # → OK（exit 0）
 python3 scripts/legal_check.py evals/sample/bad-copy.md --mode website     # → NG（exit 1）
 python3 scripts/legal_check.py evals/sample/copy.md --mode advertising     # → NG（website用の構成なので落ちるのが正しい）
+python3 scripts/legal_check.py evals/sample/bad-copy-advertising.md --mode advertising   # → NG（便利さの評価語）
 python3 scripts/validate_lp.py evals/sample/index.html --mode website      # → OK（警告: data-todo 1件）
 for f in evals/sample/reviews/*.json; do python3 scripts/check_review.py $f; done   # → すべて OK（法令の分類コード）
 ```
@@ -36,6 +37,7 @@ python3 scripts/record_publish.py --knowledge $T/knowledge --slug minato --file 
 | `sample/brief.md` | 架空の院（みなと台接骨院）のブリーフ。実在の院・人物とは関係ない |
 | `sample/copy.md` | 合格すべきコピー。誤検知していないかの確認用 |
 | `sample/bad-copy.md` | 落ちるべきコピー。NG語を足したり消したりしたら、検出が減っていないか見る |
+| `sample/bad-copy-advertising.md` | advertising モードで落ちるべきコピー。所在・時間の事実に便利さの評価を付けた例 |
 | `sample/index.html` | 完成見本。デザインシステムを変えたら見た目をここで確認する |
 | `sample/reviews/` | 審査結果の見本（1回目は法令・訴求とも不合格、2回目で合格、最終審査も合格） |
 

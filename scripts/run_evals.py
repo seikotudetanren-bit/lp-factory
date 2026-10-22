@@ -27,6 +27,7 @@ def cases(tmp: Path):
     yield "L1: 良いコピーが通る（website）", [PY, S / "legal_check.py", E / "copy.md", "--mode", "website"], 0
     yield "L1: 悪いコピーが落ちる（website）", [PY, S / "legal_check.py", E / "bad-copy.md", "--mode", "website"], 1
     yield "L1: website 用の構成は advertising で落ちる", [PY, S / "legal_check.py", E / "copy.md", "--mode", "advertising"], 1
+    yield "L1: 便利さの評価語は advertising で落ちる", [PY, S / "legal_check.py", E / "bad-copy-advertising.md", "--mode", "advertising"], 1
     yield "LP検証: 完成見本が通る", [PY, S / "validate_lp.py", E / "index.html", "--mode", "website", "--brief", E / "brief.md"], 0
     yield "LP検証: 未記入のテンプレートは落ちる", [PY, S / "validate_lp.py", ROOT / "skills/lp-design-system/assets/template.html", "--mode", "website"], 1
     for f in sorted((E / "reviews").glob("*.json")):
