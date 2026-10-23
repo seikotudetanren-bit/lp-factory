@@ -9,7 +9,7 @@
       "name": "lp-factory",
       "source": "./",
       "description": "整骨院の集客用・縦長LPを再現性のある手順で作るプラグイン",
-      "version": "0.5.4"
+      "version": "0.5.5"
     }
   ]
 }

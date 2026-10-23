@@ -51,6 +51,53 @@ description: 整骨院LPのHTML部品とデザイントークン。copy.md を1�
 - `photos: なし` なら hero と reasons の `.ph` は削除してよい（staff は残して撮影を促す）
 - **ビフォーアフター、つらそうな表情の人物、回復を表すイラストは使わない**（`lp-compliance`）
 
+## 場面タイル（empathy の補助。任意）
+
+読者が自分の生活の場面を思い浮かべられるよう、empathy のチェックリストの後に 2×2 のタイルを置いてよい。
+
+```html
+<h3 class="sub-title">{{小見出し}}</h3>
+<ul class="tiles">
+  <li class="tile">
+    <img class="tile-photo" src="images/{{ファイル}}" alt="{{場面の説明}}" width="{{実寸}}" height="{{実寸}}" loading="lazy">
+    <p class="tile-name">{{場面名}}</p>
+    <p class="tile-text">{{本文。文節の切れ目に <wbr>}}</p>
+  </li>
+</ul>
+<p class="tiles-note">写真はイメージです</p>  <!-- 素材写真のときは4枚の下に1回だけ -->
+```
+
+- 本文は場面の事実だけ（「パソコンの画面をのぞき込む姿勢が、何時間も続く」）。原因の断定や「当院で」へのつなぎは書かない（Ⅵ.4(5)）
+- 写真は brief の `photos` にあるものだけ。素材写真は出典と利用条件を brief に記録する。写真が無ければ単純な線画アイコン（inline SVG）で代える
+- 上の「写真」の決まりどおり、つらそうな表情の人物は原則使わない。brief でユーザーが判断した場合でも、痛みのマークなど症状を強調する演出や、hero・flow の写真と並べて施術前後に読める構図にはしない
+- alt は場面の説明にし、症状や効果は書かない
+
+## 会員制の料金表（会員制・回数券などのプランがあるとき）
+
+自費の料金表（`table.price`）の後に置く。費用・含む回数・追加料金・条件を**セットで**見せる（Ⅵ.3(2)・景表法）。
+
+```html
+<div class="member">
+  <h3 class="member-title">{{見出し}}</h3>
+  <p>{{入会条件・最低在籍期間・解約条件・通わない月の扱い}}</p>
+  <div class="table-wrap">
+    <table class="price member-table">
+      <thead><tr><th scope="col">プラン</th><th scope="col">月会費（税込）</th><th scope="col">月会費に含む施術</th><th scope="col">追加の施術（税込）</th></tr></thead>
+      <tbody>
+        <tr><th scope="row" class="plan">{{プラン名}}<span class="plan-cond">{{条件があれば}}</span></th>
+          <td data-label="月会費（税込）" class="yen">{{金額}}</td>
+          <td data-label="月会費に含む施術">{{回数}}</td>
+          <td data-label="追加の施術（税込）"><span class="v"><span class="nw">{{いつから}}</span> <span class="nw">{{金額}}</span></span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+```
+
+- `data-label` は thead の見出しと同じ文字にする（スマホではカードの項目名として表示される。新しい文言を作らない）
+- 「無料」「通常」「割引」、取り消し線は使わない。「月会費に○回分の施術を含む」と書く
+- 条件付きのプランは、金額と同じ行に `.plan-cond` で条件があることを書く（金額だけが目立つと有利誤認になる）
+
 ## 複数院の共通LP（brief に clinics があるとき）
 
 `access` セクションの中身を、1院の `dl.info` と地図の代わりに、院ごとのカードにする。

@@ -204,6 +204,33 @@ table.hours { width: 100%; border-collapse: collapse; background: var(--bg); bor
 .hours .sep { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }  /* 「／」は読み上げ・コピー用に残し、見た目だけ隠す */
 .hours .hours-note { display: block; color: var(--ink-sub); }
 .hours tr.closed th, .hours tr.closed td { background: color-mix(in srgb, var(--ink) 8%, var(--bg)); color: var(--ink-sub); font-weight: 700; }
+/* ===== 場面タイル（2×2）。empathy の「こんな場面で」を写真で想像させる（2026-10-23 の案件 V5.1 から取り込み） ===== */
+/* 写真 → ラベル帯 → 短い本文。本文は <wbr> を文節の切れ目に入れ、keep-all でそこだけ折り返す */
+.tiles { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile { background: var(--bg); border: 2px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+.tile-photo { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.tile-name { margin: 0; padding: 6px 8px; background: var(--brand); color: var(--brand-ink); text-align: center; font-weight: 800; font-size: 17px; line-height: 1.5; }
+.tile-text { margin: 0; padding: 10px 12px 12px; font-size: 16px; line-height: 1.7; letter-spacing: 0; word-break: keep-all; overflow-wrap: anywhere; }
+.tiles-note { margin-top: 8px; text-align: right; font-size: 13px; color: var(--ink-sub); }
+
+/* ===== 会員制の料金表（table.price.member-table）。PCは表、スマホはプランごとのカード（2026-10-23 の案件 V5.1 から取り込み） ===== */
+.member { margin-top: 32px; }
+.member-title { font-size: 20px; color: var(--brand); padding: 8px 12px; border-left: 5px solid var(--brand); background: var(--brand-soft); margin-bottom: 12px; }
+.member-table th.plan { text-align: left; font-weight: 800; background: var(--bg-alt); }
+.plan-cond { display: block; font-size: 14px; font-weight: 700; color: var(--ink-sub); line-height: 1.5; }  /* 「入会条件あり」などプランの条件 */
+table.price.member-table td.yen { color: var(--brand); }  /* スマホの table.price td.yen（--accent）より優先 */
+@media (min-width: 640px) { .member-table th.plan { white-space: nowrap; } }
+@media (max-width: 639px) {
+  table.price.member-table { background: transparent; }
+  .member-table tr { background: var(--bg); border: 2px solid var(--line) !important; border-radius: var(--radius); padding: 14px 4px !important; margin-bottom: 12px; }
+  .member-table th.plan { display: block; width: 100%; padding: 4px 14px 10px; font-size: 19px; background: transparent;
+    border-bottom: 2px dashed var(--line); margin-bottom: 8px; }
+  /* 「項目｜値」の2列。項目は td の data-label を出す。値が2語以上なら <span class="v"> で1つにまとめる（まとめないと2語目が項目の列に落ちる） */
+  .member-table td { display: grid !important; grid-template-columns: 9.5em 1fr; gap: 8px; align-items: baseline; padding: 4px 14px !important; }
+  .member-table td::before { content: attr(data-label); font-size: 16px; font-weight: 700; color: var(--ink-sub); white-space: nowrap; }
+  .member-table td.yen { font-size: 22px; }
+  .member-table td.yen::before { font-size: 16px; }
+}
 /* ===== 2026-10-22 最終審査の指摘で追加 ===== */
 /* 院カード内の主CTA: .clinic-actions a の色指定に負けて、赤地に緑の文字になっていた */
 .clinic-actions a.btn, .clinic-actions .btn { background: var(--accent); color: var(--accent-ink); border: 0; }
